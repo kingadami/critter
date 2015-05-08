@@ -44,7 +44,7 @@
 #include <zrwops.hpp>
 
 #include "GLee.h"
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 
 #include <algorithm>
 #include <string>
@@ -58,6 +58,7 @@ using namespace std;
 #endif
 
 Video::Video():
+    _window(NULL),
     _isFullscreen( false),
     _showStarfield( true),
     _showNebulas( true),
@@ -92,10 +93,20 @@ Video::~Video()
     SkillS::cleanup();
     CameraS::cleanup();
 
+    SDL_SetRelativeMouseMode(SDL_FALSE);
+
 #ifdef __APPLE__
     //Workaround for non-working minimize buttons on exit
     SDL_SetVideoMode( _width, _height, _bpp, 0);
 #endif
+    if(_glContext != NULL)
+    {
+      SDL_GL_DeleteContext(_glContext);
+    }
+    if(_window != NULL)
+    {
+      SDL_DestroyWindow(_window);
+    }
 
     SDL_QuitSubSystem( SDL_INIT_VIDEO);
     SDL_Quit();
@@ -204,8 +215,9 @@ bool Video::init( void)
 
     //hide&grab cursor and warp to centre
     SDL_ShowCursor( SDL_DISABLE);
-    SDL_WM_GrabInput( SDL_GRAB_ON);
-    SDL_WarpMouse( _width/2,  _height/2);
+    SDL_SetWindowGrab(_window,SDL_TRUE);
+    SDL_WarpMouseInWindow(_window, _width/2,  _height/2);
+    SDL_SetRelativeMouseMode(SDL_TRUE);
 
     SDL_Event event;
     while( SDL_PollEvent( &event))
@@ -252,18 +264,19 @@ bool Video::init( void)
 
 bool Video::setVideoMode( void)
 {
-    int videoFlags = SDL_OPENGL;
-
+    Uint32 videoFlags = SDL_WINDOW_OPENGL;
+#if 0
 #if SDL_VERSION_ATLEAST(1, 2, 10)
     //Disable Vsync
     SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL,0);
+#endif
 #endif
 
     ConfigS::instance()->getBoolean( "fullscreen", _isFullscreen);
     if( _isFullscreen)
     {
         LOG_INFO << "Fullscreen request." << endl;
-        videoFlags |= SDL_FULLSCREEN;
+        videoFlags |= SDL_WINDOW_FULLSCREEN;
     }
 
     if( !ConfigS::instance()->getInteger( "width", _width))
@@ -277,17 +290,25 @@ bool Video::setVideoMode( void)
 	ConfigS::instance()->updateTransitoryKeyword( "height", h);
     }
 
-    if( SDL_SetVideoMode( _width, _height, _bpp, videoFlags ) == NULL )
+    if( (_window = SDL_CreateWindow("Critical Mass (aka Critter)",
+                                    SDL_WINDOWPOS_UNDEFINED,
+				    SDL_WINDOWPOS_UNDEFINED,
+                                    _width,
+				    _height,
+				    videoFlags )) == NULL )
     {
         LOG_ERROR << "Video Mode: failed #" << SDL_GetError() << endl;
+        return false;
+    }
+    else if( (_glContext = SDL_GL_CreateContext(_window)) == NULL)
+    {
+        LOG_ERROR << "Unable to create GL context" << SDL_GetError() << endl;
         return false;
     }
     glViewport(0,0, _width, _height);
 
     //set title and icon name
-    SDL_WM_SetCaption( "Critical Mass (aka Critter)", "Critical Mass" );
-
-    SDL_Surface *surf = SDL_GetVideoSurface();
+    SDL_Surface *surf = SDL_GetWindowSurface(_window);
 
     LOG_INFO << "Video Mode: OK (" 
              << surf->w << "x" 
@@ -663,7 +684,7 @@ bool Video::update( void)
 	}
     }
 
-    SDL_GL_SwapBuffers( );
+    SDL_GL_SwapWindow(_window);
 
     return true;
 }

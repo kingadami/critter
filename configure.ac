@@ -36,7 +36,8 @@ AM_CONDITIONAL(APPLE,test "x$TARGET" = xAPPLE)
 AM_CONDITIONAL(WIN32,test "x$TARGET" = xWIN32)
 
 CFLAGS=""
-CXXFLAGS="-std=c++0x -DGAME_HAS_HERO_PARTICLE -DUSE_ONLINE_UPDATE"
+dnl CXXFLAGS="-std=c++0x -DGAME_HAS_HERO_PARTICLE -DUSE_ONLINE_UPDATE"
+CXXFLAGS="-std=c++0x -DGAME_HAS_HERO_PARTICLE"
 
 if test "x$GCC" = xyes; then
    CFLAGS="$CFLAGS -W -Wall"
@@ -80,17 +81,17 @@ if test "x$enable_trace" = xyes; then
         CXXFLAGS="$CXXFLAGS -DTRACE"
 fi
 
-AC_CHECK_LIB(SDL, main,
-    LIBS="$LIBS `sdl-config --libs`" ; \
-    CFLAGS="$CFLAGS `sdl-config --cflags`" ; \
-    CXXFLAGS="$CXXFLAGS `sdl-config --cflags`" ; \
-    HAVE_SDL=1, AC_MSG_ERROR(SDL is needed), `sdl-config --libs`)
+AC_CHECK_LIB(SDL2, main,
+    LIBS="$LIBS `sdl2-config --libs`" ; \
+    CFLAGS="$CFLAGS `sdl2-config --cflags`" ; \
+    CXXFLAGS="$CXXFLAGS `sdl2-config --cflags`" ; \
+    HAVE_SDL=1, AC_MSG_ERROR(SDL is needed), `sdl2-config --libs`)
 
-AC_CHECK_LIB(SDL_image, main, LIBS="$LIBS -lSDL_image", 
-    AC_MSG_ERROR(SDL_image is needed))
+AC_CHECK_LIB(SDL2_image, main, LIBS="$LIBS -lSDL2_image", 
+    AC_MSG_ERROR(SDL2_image is needed))
 
-AC_CHECK_LIB(SDL_mixer, main, LIBS="$LIBS -lSDL_mixer", 
-    AC_MSG_ERROR(SDL_mixer is needed))
+AC_CHECK_LIB(SDL2_mixer, main, LIBS="$LIBS -lSDL2_mixer", 
+    AC_MSG_ERROR(SDL2_mixer is needed))
 
 if test "x$TARGET" = xWIN32; then
     AC_MSG_RESULT(Adding special ingredients for mingw32)

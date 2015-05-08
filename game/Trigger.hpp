@@ -22,6 +22,7 @@ enum TriggerTypeEnum
     eMotionTrigger
 };
 
+//TODO: Should probably tailor the data types to be more correct. ex: add a keycode field
 struct Trigger
 {
     TriggerTypeEnum type;

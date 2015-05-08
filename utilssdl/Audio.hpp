@@ -17,7 +17,7 @@
 #include <string>
 
 #define USE_RWOPS
-#include "SDL/SDL_mixer.h"
+#include "SDL2/SDL_mixer.h"
 #include "Singleton.hpp"
 
 using std::string;

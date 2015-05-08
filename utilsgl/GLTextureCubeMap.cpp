@@ -50,7 +50,9 @@ GLenum GLTextureCubeMap::getGLTextureFormat( SDL_Surface *image)
 {
     int texFormat = GL_RGB;
 
-    if( image->flags & (SDL_SRCALPHA | SDL_SRCCOLORKEY))
+    //if( _image->flags & (SDL_SRCALPHA | SDL_SRCCOLORKEY))
+    Uint32 colorKey = 0;
+    if((SDL_GetColorKey(image,&colorKey) == 0) || (image->format->Amask != 0))
     {
         texFormat = GL_RGBA;
     }

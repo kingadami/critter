@@ -23,7 +23,6 @@ GLTexture::GLTexture( GLenum target, const char *fileName, bool mipmap):
 {
     XTRACE();
     SDL_Surface *image;
-    IMG_InvertAlpha(1);
     if( (image = IMG_Load( fileName)) == 0)
     {
 	LOG_ERROR << "Couldn't load " << fileName << ": " << SDL_GetError() << "\n";
@@ -139,7 +138,9 @@ GLenum GLTexture::getGLTextureFormat( void)
 {
     int texFormat = GL_RGB;
 
-    if( _image->flags & (SDL_SRCALPHA | SDL_SRCCOLORKEY))
+    //if( _image->flags & (SDL_SRCALPHA | SDL_SRCCOLORKEY))
+    Uint32 colorKey = 0;
+    if((SDL_GetColorKey(_image,&colorKey) == 0) || (_image->format->Amask != 0))
     {
         texFormat = GL_RGBA; 
     }

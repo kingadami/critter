@@ -16,7 +16,7 @@
 //
 #include "GLBitmapCollection.hpp"
 
-#include <SDL/SDL_image.h>
+#include <SDL2/SDL_image.h>
 #include <zrwops.hpp>
 
 #include "Trace.hpp"

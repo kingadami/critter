@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libutilsgl.a
 
-libutilsglincludedir = $(includedir)/SDL
+libutilsglincludedir = $(includedir)/SDL2
 
 libutilsgl_a_SOURCES = \
         Camera.cpp \

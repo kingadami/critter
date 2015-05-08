@@ -14,6 +14,6 @@
 // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details
 //
 #include "zStream.hpp"
-#include <SDL/SDL_rwops.h>
+#include <SDL2/SDL_rwops.h>
 
 extern SDL_RWops *RWops_from_ziStream( ziStream &zi);

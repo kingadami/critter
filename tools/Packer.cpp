@@ -23,8 +23,8 @@
 #include <WalkDirectory.hpp>
 #include <PNG.hpp>
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 
 using namespace std;
 
@@ -45,7 +45,6 @@ public:
     {
 	fileName = aFileName;
 	img = IMG_Load( fileName.c_str());
-	SDL_SetAlpha(img,0,0);
 
 	_dim.width = img->w;
 	_dim.height = img->h;

@@ -553,7 +553,7 @@ void EnumSelectable::input( const Trigger &trigger, const bool &isDown, const Po
             
 	case eButtonTrigger:
 	    {
-                if( trigger.data1 == SDL_BUTTON_WHEELDOWN)
+                if( trigger.data1 == SDL_BUTTON_MIDDLE)
                 {
                     prevEnum();
                 }
@@ -943,21 +943,11 @@ void ResolutionSelectable::applyResolution( void)
 
 void ResolutionSelectable::addFullscreenResolutions(void)
 {
-    SDL_Rect **modes=SDL_ListModes(NULL, SDL_FULLSCREEN | SDL_OPENGL);
-
-    if( modes == (SDL_Rect **)0)
-    {
-	return;
-    }
-
-    if( modes == (SDL_Rect **)-1)
-    {
-	return;
-    }
-
-    for(int i=0; modes[i]; i++)
-    {
-	Resolution newRes( modes[i]->w, modes[i]->h);
+  for(int i = 0;i < SDL_GetNumDisplayModes(0);++i)
+  {
+    SDL_DisplayMode mode;
+    SDL_GetDisplayMode(0,i,&mode);
+	Resolution newRes( mode.w, mode.h);
         
 	bool add = true;
 	vector<Resolution>::iterator res;
@@ -976,7 +966,7 @@ void ResolutionSelectable::addFullscreenResolutions(void)
 	    //LOG_INFO << "Adding new " << newRes.text << endl;
 	    _resolutionList.push_back( newRes);
 	}
-    }
+  }
 }
 
 void ResolutionSelectable::prevResolution( void)
@@ -1039,7 +1029,7 @@ void ResolutionSelectable::input( const Trigger &trigger, const bool &isDown, co
 		    }
 		    else
 		    {
-                        if( trigger.data1 == SDL_BUTTON_WHEELDOWN)
+                        if( trigger.data1 == SDL_BUTTON_MIDDLE)
                         {
                             prevResolution();
                         }

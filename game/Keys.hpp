@@ -16,7 +16,7 @@
 
 #include <string>
 
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 
 #include "Trigger.hpp"
 
@@ -32,6 +32,4 @@ public:
 private:
     Keys( const Keys&);
     Keys &operator=(const Keys&);
-
-    std::string _symmap[ SDLK_LAST];
 };

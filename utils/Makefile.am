@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libutils.a
 
-libutilsincludedir = $(includedir)/SDL 
+libutilsincludedir = $(includedir)/SDL2
 
 libutils_a_SOURCES = \
 	Config.cpp \

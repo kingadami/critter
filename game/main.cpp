@@ -12,7 +12,7 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details
 //
-#include "SDL/SDL.h" //needed for SDL_main
+#include "SDL2/SDL.h" //needed for SDL_main
 #include <zlib.h>
 
 #include "Trace.hpp"
@@ -148,19 +148,20 @@ void showInfo()
     LOG_INFO << "----------------------------------" << endl;
 }
 
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <png.h>
 #include <OSName.hpp>
 void showVersions( void)
 {
     LOG_INFO << "OS: " << OSNAME() << endl;
 
-    const SDL_version *vsdl = SDL_Linked_Version();
+    SDL_version vsdl;
+    SDL_GetVersion(&vsdl);
     LOG_INFO << "SDL Version " 
-             << (int)vsdl->major  << "."
-             << (int)vsdl->minor  << "."
-             << (int)vsdl->patch  << endl;
+             << (int)vsdl.major  << "."
+             << (int)vsdl.minor  << "."
+             << (int)vsdl.patch  << endl;
     const SDL_version *isdl = IMG_Linked_Version();
     LOG_INFO << "SDL_image Version " 
              << (int)isdl->major  << "."

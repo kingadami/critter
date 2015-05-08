@@ -92,7 +92,7 @@ void TextInput::input( const Trigger &trigger, const bool &isDown)
 void TextInput::turnOn( void)
 {
     XTRACE();
-    SDL_EnableUNICODE( true);
+    //SDL_EnableUNICODE( true);
     InputS::instance()->enableInterceptor( this);
     _isOn = true;
 }
@@ -102,7 +102,7 @@ void TextInput::turnOff( void)
     XTRACE();
 
     InputS::instance()->disableInterceptor();
-    SDL_EnableUNICODE( false);
+    //SDL_EnableUNICODE( false);
 
     //pass escape to previous input handling...
     SDL_Event event;

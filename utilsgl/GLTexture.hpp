@@ -14,7 +14,7 @@
 // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details
 //
 
-#include <SDL/SDL_image.h>
+#include <SDL2/SDL_image.h>
 #include "GLee.h"
 
 class GLTextureI

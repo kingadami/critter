@@ -15,7 +15,7 @@
 #include "Input.hpp"
 
 #include <math.h>
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 
 #include "Trace.hpp"
 #include "Config.hpp"
@@ -25,6 +25,7 @@
 #include "CallbackManager.hpp"
 #include "Tokenizer.hpp"
 #include "Value.hpp"
+#include "Video.hpp"
 
 #ifdef __APPLE__
 #define MAIN_MODIFIER KMOD_META
@@ -70,7 +71,7 @@ bool Input::init( void)
     LOG_INFO << "Mouse smoothing: " << _dampVal << endl;
     LOG_INFO << "Mouse sensitivity: " << _sensitivity << endl;
 
-    SDL_EnableKeyRepeat( 300,200);
+    //SDL_EnableKeyRepeat( 300,200);
 
     _callbackManager.init();
 
@@ -124,11 +125,11 @@ bool Input::tryGetTrigger( Trigger &trigger, bool &isDown)
             if( (event.key.keysym.sym == SDLK_g) &&
                 (event.key.keysym.mod & MAIN_MODIFIER))                
             {
-		SDL_GrabMode gmode = SDL_WM_GrabInput( SDL_GRAB_QUERY);
-		if( gmode == SDL_GRAB_OFF )
-		    SDL_WM_GrabInput( SDL_GRAB_ON);
-		else if ( gmode == SDL_GRAB_ON )
-		    SDL_WM_GrabInput( SDL_GRAB_OFF);
+	      SDL_bool gmode = SDL_GetWindowGrab(VideoS::instance()->getWindow());
+		if( gmode == SDL_FALSE )
+		    SDL_SetWindowGrab(VideoS::instance()->getWindow(),SDL_TRUE);
+		else if ( gmode == SDL_TRUE )
+		    SDL_SetWindowGrab(VideoS::instance()->getWindow(),SDL_FALSE);
 	    }
             if( (event.key.keysym.sym == SDLK_f) &&
                 (event.key.keysym.mod & MAIN_MODIFIER))                
@@ -158,7 +159,7 @@ bool Input::tryGetTrigger( Trigger &trigger, bool &isDown)
 	    trigger.type = eKeyTrigger;
 	    trigger.data1 = event.key.keysym.sym;
 	    trigger.data2 = event.key.keysym.mod;
-	    trigger.data3 = event.key.keysym.unicode;
+	    //trigger.data3 = event.key.keysym.unicode;
 	    break;
 
 	case SDL_MOUSEBUTTONDOWN:

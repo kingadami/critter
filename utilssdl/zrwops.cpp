@@ -17,11 +17,11 @@
 #include <stdlib.h>
 #include "Trace.hpp"
 
-int ziStream_seek(struct SDL_RWops *context,int offset,int whence)
+Sint64 ziStream_seek(struct SDL_RWops *context,Sint64 offset,int whence)
 {
     ziStream &zi = *((ziStream*)context->hidden.unknown.data1);
     int pos = zi.currentPos();
-    int delta = 0;
+    Sint64 delta = 0;
 #if 0
     LOG_INFO << "ziStream_seek pos=" << pos 
         << " whence=" << whence
@@ -81,13 +81,14 @@ int ziStream_seek(struct SDL_RWops *context,int offset,int whence)
 
     return zi.currentPos();
 }
-int ziStream_read(struct SDL_RWops *context, void *ptr, int size, int maxnum)
+size_t ziStream_read(struct SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
 {
     ziStream &zi = *((ziStream*)context->hidden.unknown.data1);
     zi.read( (char*)ptr, size*maxnum);
     return( maxnum);
 }
-int ziStream_write(struct SDL_RWops *,const void *,int,int)
+
+size_t ziStream_write(struct SDL_RWops *,const void *,size_t,size_t)
 {
     LOG_ERROR << "ziStream_write not implemented!\n";
     return -1;

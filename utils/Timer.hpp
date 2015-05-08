@@ -17,7 +17,7 @@
 #ifdef TIMER_USE_GETTIMEOFDAY
 #include "gettimeofday.hpp"
 #else
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 #endif
 
 class Timer

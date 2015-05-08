@@ -14,6 +14,7 @@
 // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details
 //
 #include <string>
+#include "SDL2/SDL.h"
 
 #include <GLTexture.hpp>
 #include <GLBitmapFont.hpp>
@@ -45,6 +46,8 @@ public:
 
     void takeSnapshot( void);
 
+    SDL_Window* getWindow( void) { return _window; }
+
 private:
     ~Video();
     Video( void);
@@ -55,6 +58,9 @@ private:
     void reload( void);
     bool updateSettings( void);
     bool setVideoMode( void);
+
+    SDL_Window* _window;
+    SDL_GLContext _glContext;
 
     bool _isFullscreen;
     bool _showStarfield;

@@ -20,7 +20,7 @@
 
 #include <Trace.hpp>
 #include <Singleton.hpp>
-#include "SDL/SDL_thread.h"
+#include "SDL2/SDL_thread.h"
 
 class OnlineUpdate
 {

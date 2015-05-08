@@ -12,7 +12,7 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details
 //
-#include "SDL/SDL.h" //key syms
+#include "SDL2/SDL.h" //key syms
 
 #include <Trace.hpp>
 #include <MenuManager.hpp>

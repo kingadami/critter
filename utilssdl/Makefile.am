@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libutilssdl.a
 
-libutilssdlincludedir = $(includedir)/SDL
+libutilssdlincludedir = $(includedir)/SDL2
 
 libutilssdl_a_SOURCES = \
 	Audio.cpp \

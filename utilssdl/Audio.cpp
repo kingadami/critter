@@ -29,8 +29,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_mixer.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_mixer.h"
 
 Audio::Audio():
   _sampleManager(0),
@@ -114,8 +114,7 @@ void Audio::loadMusic( const string &mod)
 	return;
     }
 
-    _soundTrack = Mix_LoadMUS_RW(src);
-    SDL_FreeRW(src);
+    _soundTrack = Mix_LoadMUS_RW(src,1);
 
     if( !_soundTrack)
     { 
