@@ -99,13 +99,15 @@ Video::~Video()
     //Workaround for non-working minimize buttons on exit
     SDL_SetVideoMode( _width, _height, _bpp, 0);
 #endif
-    if(_glContext != NULL)
+    if(_glContext)
     {
       SDL_GL_DeleteContext(_glContext);
+      _glContext = NULL;
     }
-    if(_window != NULL)
+    if(_window)
     {
       SDL_DestroyWindow(_window);
+      _window = NULL;
     }
 
     SDL_QuitSubSystem( SDL_INIT_VIDEO);
@@ -115,6 +117,19 @@ Video::~Video()
 void Video::reset( void)
 {
     ModelManagerS::instance()->reset();
+
+    //we need to cleanup the window and gl context
+    if(_glContext)
+    {
+      SDL_GL_DeleteContext(_glContext);
+      _glContext = NULL;
+    }
+
+    if(_window)
+    {
+      SDL_DestroyWindow(_window);
+      _window = NULL;
+    }
 }
 
 void Video::reload( void)
@@ -265,17 +280,10 @@ bool Video::init( void)
 bool Video::setVideoMode( void)
 {
     Uint32 videoFlags = SDL_WINDOW_OPENGL;
-#if 0
-#if SDL_VERSION_ATLEAST(1, 2, 10)
-    //Disable Vsync
-    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL,0);
-#endif
-#endif
 
     ConfigS::instance()->getBoolean( "fullscreen", _isFullscreen);
     if( _isFullscreen)
     {
-        LOG_INFO << "Fullscreen request." << endl;
         videoFlags |= SDL_WINDOW_FULLSCREEN;
     }
 
@@ -300,11 +308,16 @@ bool Video::setVideoMode( void)
         LOG_ERROR << "Video Mode: failed #" << SDL_GetError() << endl;
         return false;
     }
+    else if(SDL_SetWindowDisplayMode(_window,NULL) < 0)
+    {
+      LOG_ERROR << "Set Window display mode failed " << SDL_GetError() << endl;
+    }
     else if( (_glContext = SDL_GL_CreateContext(_window)) == NULL)
     {
         LOG_ERROR << "Unable to create GL context" << SDL_GetError() << endl;
         return false;
     }
+
     glViewport(0,0, _width, _height);
 
     //set title and icon name
@@ -327,7 +340,33 @@ bool Video::updateSettings( void)
     int height = 0;
     ConfigS::instance()->getInteger( "height", height);
 
-    if( (fullscreen != _isFullscreen) || (width != _width) || (height != _height) )
+    //first just check to see if we are going fullscreen and not changing resolution
+    if( (fullscreen != _isFullscreen) && (width == _width) && (height == _height) )
+    {
+      if(_isFullscreen)
+      {
+        if(SDL_SetWindowFullscreen(_window,SDL_WINDOW_FULLSCREEN) < 0)
+        {
+	  LOG_ERROR << "Error going to fullscreen " << SDL_GetError() << std::endl;
+	  //undo the fullscreen
+	  _isFullscreen = fullscreen;
+	  Value *fs = new Value(_isFullscreen);
+	  ConfigS::instance()->updateKeyword( "fullscreen", fs);
+        }
+      }
+      else
+      {
+	//go to windowed mode
+        if(SDL_SetWindowFullscreen(_window,0) < 0)
+        {
+	  //undo the fullscreen
+	  _isFullscreen = fullscreen;
+	  Value *fs = new Value(_isFullscreen);
+	  ConfigS::instance()->updateKeyword( "fullscreen", fs);
+        }
+      }
+    }
+    else if( (fullscreen != _isFullscreen) || (width != _width) || (height != _height) )
     {
 	reset();
 	bool oldFullscreen = _isFullscreen;
